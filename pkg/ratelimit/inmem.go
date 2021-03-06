@@ -113,11 +113,11 @@ func (imrl *InMemRateLimit) Inc(timestampSec int64) {
 // than the minimum number of seconds that must pass
 // before new requests are added to the minute window
 func (imrl *InMemRateLimit) NumEmptySlotsAtStart() int {
-	for idx := 0; idx < 60; idx++ {
+	for idx := int64(0); idx < 60; idx++ {
 		i := (imrl.StartIdx + idx) % 60
 		if imrl.Window[i] != 0 {
-			return idx
+			return int(idx)
 		}
 	}
-	return idx
+	return 60
 }

@@ -21,7 +21,9 @@ var (
 func main() {
 	fmt.Println("DynLimits proxy")
 
-	pool := ratelimit.NewRedisPool("localhost:6379")
+	pool := ratelimit.NewRedisPool(
+		ratelimit.NewRedisPoolConf("localhost:6379"))
+
 	conn := pool.Get()
 	defer conn.Close()
 

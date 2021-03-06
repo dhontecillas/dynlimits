@@ -19,7 +19,7 @@ type RedisPoolConf struct {
 	Address          string
 	MaxIdleMinutes   int
 	ConnectTimeoutMs int64
-	ReadTimoutMs     int64
+	ReadTimeoutMs    int64
 }
 
 // NewRedisPoolConf creates a new redis pool configuration
@@ -27,7 +27,7 @@ type RedisPoolConf struct {
 func NewRedisPoolConf(address string) *RedisPoolConf {
 	return &RedisPoolConf{
 		Address:          address,
-		MaxIddleMinutes:  300,
+		MaxIdleMinutes:   300,
 		ConnectTimeoutMs: 300,
 		ReadTimeoutMs:    200,
 	}
@@ -35,7 +35,7 @@ func NewRedisPoolConf(address string) *RedisPoolConf {
 
 // NewRedisPool creates a redis pool to be used as
 // the storage for rate limit data
-func NewRedisPool(conf *NewRedisPoolConf) *redis.Pool {
+func NewRedisPool(conf *RedisPoolConf) *redis.Pool {
 	if conf == nil {
 		// if no conf provided we default to localhost and default port
 		conf = NewRedisPoolConf("localhost:6379")
@@ -44,7 +44,7 @@ func NewRedisPool(conf *NewRedisPoolConf) *redis.Pool {
 		MaxIdle:     300,
 		IdleTimeout: time.Minute,
 		Dial: func() (redis.Conn, error) {
-			return redis.Dial("tcp", address, redis.DialDatabase(0),
+			return redis.Dial("tcp", conf.Address, redis.DialDatabase(0),
 				redis.DialConnectTimeout(300*time.Millisecond),
 				redis.DialReadTimeout(200*time.Millisecond))
 		},

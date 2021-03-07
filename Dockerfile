@@ -1,7 +1,7 @@
 FROM golang:1.16.0-buster as builder
 
-COPY . /go/src/github.com/dhontecillas/reqstatsrv
-WORKDIR /go/src/github.com/dhontecillas/reqstatsrv
+COPY . /go/src/github.com/dhontecillas/dynlimits
+WORKDIR /go/src/github.com/dhontecillas/dynlimits
 RUN go build ./cmd/proxy
 
 FROM bitnami/minideb:stretch
@@ -17,6 +17,7 @@ ENV DYNLIMITS_CATALOG_SERVER ""
 ENV DYNLIMITS_CATALOG_SERVER_APIKEY ""
 
 EXPOSE 7777
+COPY --from=builder /go/src/github.com/dhontecillas/dynlimits/proxy /dynlimits
 
 LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.description="DynLimits: Rate Limiting Proxy" \
@@ -27,3 +28,5 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.vcs-ref=$BUILD_VCS_REF \
       org.label-schema.vendor="David Hontecillas" \
       org.label-schema.version=$BUILD_VERSION
+
+CMD ["/dynlimits"]

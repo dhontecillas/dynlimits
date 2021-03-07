@@ -25,7 +25,7 @@ func main() {
 	conf := config.LoadConf()
 
 	pool := ratelimit.NewRedisPool(
-		ratelimit.NewRedisPoolConf("localhost:6379"))
+		ratelimit.NewRedisPoolConf(conf.RedisAddress))
 	conn := pool.Get()
 	defer conn.Close()
 
@@ -50,6 +50,10 @@ func main() {
 			fmt.Printf("---------- Aborting\n")
 			return
 		}
+		fmt.Printf("initial catalog file:\n %#v\n", conf)
+		fmt.Printf("indexedLimits:\n %#v\n", indexedLimits)
+	} else {
+		fmt.Printf("no initial catalog file\n: %#v\n", conf)
 	}
 
 	// crate the shared path matcher

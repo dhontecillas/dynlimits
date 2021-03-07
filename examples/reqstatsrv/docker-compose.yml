@@ -1,0 +1,12 @@
+version: "2.1"
+services:
+  reqstatsrv:
+      container_name: "dynlimits_reqstatsrv"
+      image: "dhontecillas/reqstatsrv:0.1"
+      ports:
+        - "9876:9876"
+  redis:
+      container_name: "dynlimits_reqstatsrv_redis"
+      image: "redis:latest"
+      ports:
+        - "6379:6379"

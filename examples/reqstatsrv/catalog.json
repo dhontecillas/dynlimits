@@ -1,0 +1,27 @@
+{
+	"methods": [
+        "GET",
+        "POST",
+        "DELETE",
+        "PUT",
+        "PATCH",
+        "HEAD",
+        "OPTIONS"],
+	"paths": [
+		"\/foo",
+		"\/bar"
+	],
+	"endpoints": [
+		{"p": 0, "m": 0},
+		{"p": 1, "m": 0}
+	],
+	"apilimits": [
+		{
+			"key": "7H6AMB0FXQKQBG3JKPW1PXTTNW",
+		  	"limits": [
+				{ "ep": 0, "rl": 20 },
+				{ "ep": 1, "rl": 5 }
+		 	]
+		}
+	]
+}

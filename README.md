@@ -27,6 +27,10 @@ to fetch updates from the catalog server.
 The proxy is designed to have several instances running
 concurrently, with the shared limits stored in a Redis instance.
 
+You can have a look at a **draft example** in the
+`examples/restatsrv` folder, where you can find a
+[README.md with instructions](./examples/restatsrv/README.md)
+to run the test.
 
 ## Configuration
 

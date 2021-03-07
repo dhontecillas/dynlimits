@@ -91,6 +91,7 @@ func RedisUpdate(conn redis.Conn, ail *APIIndexedLimits) {
 	n := time.Now()
 	updateTime, err := RedisStartUpdate(conn, n)
 	if updateTime == nil || err != nil {
+		fmt.Printf("cannot start redis update: %s\n", err.Error())
 		return
 	}
 

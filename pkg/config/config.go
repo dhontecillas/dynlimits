@@ -84,7 +84,7 @@ func LoadConf() *DynLimitsConfig {
 		ForwardToPort:         v.GetString(KeyDynLimitsForwardToPort),
 		ForwardToScheme:       v.GetString(KeyDynLimitsForwardToScheme),
 		RedisAddress:          v.GetString(KeyDynLimitsRedisAddress),
-		CatalogFile:           v.GetString(KeyDynLimitsRedisAddress),
+		CatalogFile:           v.GetString(KeyDynLimitsCatalogFile),
 		CatalogServerURL:      v.GetString(KeyDynLimitsCatalogServerURL),
 		CatalogServerAPIKey:   v.GetString(KeyDynLimitsCatalogServerAPIKey),
 		CatalogServerPollSecs: int64(v.GetInt(KeyDynLimitsCatalogServerPollSecs)),

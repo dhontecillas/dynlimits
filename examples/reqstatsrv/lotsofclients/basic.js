@@ -23,6 +23,7 @@ export default function() {
         respRateLimited.add(1)
     } else {
         respOther.add(1)
+        console.log("res: " + response.status + JSON.stringify(response))
     }
 };
 

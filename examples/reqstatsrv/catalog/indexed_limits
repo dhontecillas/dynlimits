@@ -14,7 +14,7 @@
 		"\/endpoint_b\/{b_id}",
 		"\/endpoint_c\/{c_id}",
 		"\/endpoint_d",
-		"\/endpoint_d",
+		"\/endpoint_d"
 	],
 	"endpoints": [
 		{"p": 0, "m": 0},
@@ -27,13 +27,13 @@
 		{"p": 3, "m": 0},
 		{"p": 4, "m": 0},
 		{"p": 5, "m": 0},
-		{"p": 6, "m": 0},
+		{"p": 6, "m": 0}
 	],
 	"apilimits": [
 		{
 			"key": "0000001",
 		  	"limits": [
-				{ "ep": 0, "rl": 20 },
+				{ "ep": 0, "rl": 10 },
 				{ "ep": 1, "rl": 5 }
 		 	]
 		}

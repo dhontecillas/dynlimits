@@ -1,5 +1,10 @@
 import{sleep, check} from "k6";
+import { Counter } from "k6/metrics"
 import http from "k6/http";
+
+let respOk = new Counter('response_ok')
+let respRateLimited = new Counter('response_ratelimited')
+let respOther = new Counter('response_other')
 
 export default function() {
     let port = 7901
@@ -15,8 +20,13 @@ export default function() {
     }
     let endpoint = "http://192.168.1.20:" + port.toString() + "/foo"
     let response = http.get(endpoint, params)
-    check(response, {
-        'non blocked': (res) => res.status === 200
-         })
+
+    if(response.status === 200){
+        respOk.add(1)
+    } else if (response.status === 429 ){
+        respRateLimited.add(1)
+    } else {
+        respOther.add(1)
+    }
     sleep(1/reqPerSec)
 };

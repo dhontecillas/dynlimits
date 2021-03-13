@@ -15,5 +15,5 @@ docker run --rm --name 'dynlimits_1' -d \
     -p 7901:7777 \
     dhontecillas/dynlimits:0.1
 
-docker run -i --rm loadimpact/k6 run --vus 1 --duration 1m - <k6_01.js
+docker run -i --name 'k6_1' --rm loadimpact/k6 run --vus 1 --duration 1m - <k6_01.js
 docker stop dynlimits_1

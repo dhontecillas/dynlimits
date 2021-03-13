@@ -48,7 +48,7 @@ base = {
 }
 
 for eidx in range(num_endpoints):
-    base['paths'].append(f"endpoint_{eidx}")
+    base['paths'].append(f"/endpoint_{eidx}")
     base['endpoints'].append({"p": eidx, "m": 0})
 
 num_rate_limits = len(ratelimits)

@@ -5,7 +5,7 @@
 DynLimits allows to define different rate limits for each http verb
 and endpoint that is defined.
 
-![Under MIT License](LICENSE), so do what you want with this but do not
+[Under MIT License](LICENSE), so do what you want with this but do not
 blame me :)
 
 

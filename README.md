@@ -5,8 +5,7 @@
 DynLimits allows to define different rate limits for each http verb
 and endpoint that is defined.
 
-[Under MIT License](LICENSE), so do what you want with this but do not
-blame me :)
+[Under MIT License](LICENSE)
 
 
 ## Overview
@@ -30,7 +29,10 @@ concurrently, with the shared limits stored in a Redis instance.
 You can have a look at a **draft example** in the
 `examples/restatsrv` folder, where you can find a
 [README.md with instructions](./examples/reqstatsrv/README.md)
-to run the test.
+to run the tests, or you can watch:
+
+[![DynLimits PoC Overview](https://img.youtube.com/vi/NYjlruc_VxI/0.jpg)](https://www.youtube.com/watch?v=NYjlruc_VxI)
+
 
 ## Configuration
 

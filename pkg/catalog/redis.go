@@ -22,6 +22,11 @@ const (
 	UpdateTimeoutSeconds int64 = 5 * 60 // 5 min to update the catalog
 )
 
+/* RedisStartUpdate sets a redis key with the time starting to update
+the redis catalog if it is not set (no other process is updatating the
+catalog) returning the given timestamp. In case it cannot set the
+timestamp it returns a nil time, and nil error.
+*/
 func RedisStartUpdate(conn redis.Conn, tm time.Time) (*time.Time, error) {
 	// we have 5 minutes to complete a full update of the redis catalog
 	res, err := conn.Do("SET", RedisKeyUpdating, tm.Format(time.RFC3339), "NX",
@@ -85,13 +90,19 @@ func RedisUpdateLimits(conn redis.Conn, ail *APIIndexedLimits) {
 	}
 }
 
+// RedisUpdate loads a catalog of per endpoint and api key
+// into Redis
 func RedisUpdate(conn redis.Conn, ail *APIIndexedLimits) {
 	// TODO: Put the catalog version into the APIIndexedLimits
 	// TODO: Split the catalog vs limits versions
 	n := time.Now()
 	updateTime, err := RedisStartUpdate(conn, n)
-	if updateTime == nil || err != nil {
+	if err != nil {
 		fmt.Printf("cannot start redis update: %s\n", err.Error())
+		return
+	}
+	if updateTime == nil {
+		// another process already started updateing the catalog
 		return
 	}
 

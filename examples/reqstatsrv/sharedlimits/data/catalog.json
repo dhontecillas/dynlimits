@@ -1,0 +1,24 @@
+{
+	"methods": [
+        "GET",
+        "POST",
+        "DELETE",
+        "PUT",
+        "PATCH",
+        "HEAD",
+        "OPTIONS"],
+	"paths": [
+		"\/foo"
+	],
+	"endpoints": [
+		{"p": 0, "m": 0}
+	],
+	"apilimits": [
+		{
+			"key": "000001",
+		  	"limits": [
+				{ "ep": 0, "rl": 60000 }
+		 	]
+		}
+	]
+}

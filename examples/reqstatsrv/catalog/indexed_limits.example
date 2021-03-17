@@ -1,0 +1,41 @@
+{
+	"methods": [
+        "GET",
+        "POST",
+        "DELETE",
+        "PUT",
+        "PATCH",
+        "HEAD",
+        "OPTIONS"],
+	"paths": [
+		"\/endpoint_a\/{a_id}",
+		"\/endpoint_a\/{a_id}/path_a",
+		"\/endpoint_a\/{a_id}/path_b",
+		"\/endpoint_b\/{b_id}",
+		"\/endpoint_c\/{c_id}",
+		"\/endpoint_d",
+		"\/endpoint_d"
+	],
+	"endpoints": [
+		{"p": 0, "m": 0},
+		{"p": 0, "m": 1},
+		{"p": 0, "m": 2},
+		{"p": 1, "m": 3},
+		{"p": 1, "m": 4},
+		{"p": 2, "m": 3},
+		{"p": 2, "m": 4},
+		{"p": 3, "m": 0},
+		{"p": 4, "m": 0},
+		{"p": 5, "m": 0},
+		{"p": 6, "m": 0}
+	],
+	"apilimits": [
+		{
+			"key": "0000001",
+		  	"limits": [
+				{ "ep": 0, "rl": 10 },
+				{ "ep": 1, "rl": 5 }
+		 	]
+		}
+	]
+}

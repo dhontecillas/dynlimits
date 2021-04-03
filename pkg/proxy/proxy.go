@@ -36,6 +36,7 @@ func (ph *ProxyHandler) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	nr.Host = ph.forwardAddr
 	nr.URL.Scheme = ph.scheme
 	nr.URL.Host = ph.forwardAddr
+	nr.ContentLength = req.ContentLength
 
 	for key, slc := range req.Header {
 		nr.Header[key] = make([]string, len(slc))

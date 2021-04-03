@@ -66,6 +66,7 @@ func RedisFinishUpdate(conn redis.Conn, started time.Time,
 }
 
 func RedisUpdateLimits(conn redis.Conn, ail *APIIndexedLimits) {
+	var numCommands = 0
 	for _, akil := range ail.APILimits {
 		apiKey := akil.APIKey
 		for _, lim := range akil.Limits {
@@ -82,11 +83,21 @@ func RedisUpdateLimits(conn redis.Conn, ail *APIIndexedLimits) {
 			mn := strings.ToUpper(ail.Methods[eidx.MethodIdx])
 			key := fmt.Sprintf("%s_%s_%s", apiKey, mn,
 				ail.Paths[eidx.PathIdx])
-			fmt.Printf("set limit for %s to %d\n", key, lim.RateLimit)
 			// TODO: we can optimize this by checking if the ratelimit
 			// has changed.
-			ratelimit.SetRedisRateLimit(conn, key, lim.RateLimit)
+			ratelimit.SendSetRedisRateLimit(conn, key, lim.RateLimit)
+
+			// batch sending commands
+			numCommands++
+			if numCommands > 100 {
+				conn.Do("EXEC")
+				numCommands = 0
+			}
 		}
+	}
+
+	if numCommands > 0 {
+		conn.Do("EXEC")
 	}
 }
 

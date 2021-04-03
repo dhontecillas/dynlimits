@@ -80,6 +80,12 @@ func SetRedisRateLimit(conn redis.Conn, key string, reqPerMin int64) error {
 	return err
 }
 
+// SendSetRedisRateLimit adds the updated number of allowed requests per
+// minute to the redis connection command buffer
+func SendSetRedisRateLimit(conn redis.Conn, key string, reqPerMin int64) error {
+	return conn.Send("SET", fmt.Sprintf(RedisReqPerMinPattern, key), reqPerMin)
+}
+
 // GetRedisSlidingCountersWindow returns an SlidingCountersWindow for
 // a given Key
 func GetRedisSlidingCountersWindow(conn redis.Conn, key string,

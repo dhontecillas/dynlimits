@@ -49,6 +49,7 @@ func (rlm *RateLimitMiddleware) ServeHTTP(rw http.ResponseWriter, req *http.Requ
 	apiKey, ok := req.Header[rlm.apiKeyHeader]
 	if !ok || len(apiKey) == 0 || len(apiKey[0]) == 0 {
 		// no key, no request :)
+		fmt.Printf("missing API key: %b %#v\n", ok, apiKey)
 		rw.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -107,6 +108,9 @@ func (rlm *RateLimitMiddleware) ServeHTTP(rw http.ResponseWriter, req *http.Requ
 	}
 	header.Add("RateLimit-Remaining", strconv.FormatInt(wnd.ReqPerMin-wnd.Sum-1, 10))
 	err = ratelimit.AddToRedisSlidingCountersWindow(conn, key, now)
+	if err != nil {
+		fmt.Errorf("failed to add to counters window: %s\n", err.Error())
+	}
 	conn.Close()
 	rlm.next.ServeHTTP(rw, req)
 }

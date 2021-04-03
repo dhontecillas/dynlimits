@@ -4,6 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"os"
+	"os/signal"
+	"runtime/pprof"
 
 	"github.com/dhontecillas/dynlimits/pkg/catalog"
 	"github.com/dhontecillas/dynlimits/pkg/config"
@@ -19,8 +22,39 @@ var (
 	globalSharedPathMatcher *pathmatcher.SharedPathMatcher
 )
 
+var profFile *os.File
+
+func startProfiling() {
+	var err error
+	profFile, err = os.Create("cpuprofile")
+	if err != nil {
+		fmt.Printf("cannot start cpuprofiling %s\n", err.Error())
+		return
+	}
+	if err := pprof.StartCPUProfile(profFile); err != nil {
+		fmt.Printf("cannot start cpuprofiling %s\n", err.Error())
+		return
+	}
+
+	fmt.Printf("started profiling\n")
+}
+
+func endProfiling() {
+	fmt.Printf("end profile called\n")
+	if profFile != nil {
+		fmt.Printf("recording profile\n")
+		pprof.StopCPUProfile()
+		profFile.Close()
+	} else {
+		fmt.Printf("was not opened the os.File\n")
+	}
+}
+
 func main() {
 	fmt.Println("DynLimits proxy")
+
+	startProfiling()
+	defer endProfiling()
 
 	conf := config.LoadConf()
 
@@ -51,7 +85,6 @@ func main() {
 			return
 		}
 		fmt.Printf("initial catalog file:\n %#v\n", conf)
-		fmt.Printf("indexedLimits:\n %#v\n", indexedLimits)
 	} else {
 		fmt.Printf("no initial catalog file\n: %#v\n", conf)
 	}
@@ -95,8 +128,19 @@ func main() {
 		"X-Api-Key", &defApiKeyCatalog, pool, globalSharedPathMatcher)
 
 	// server.LaunchBlockingServer(proxyH)
-	server.LaunchBlockingServer(conf.ListenAddr(), rateLimitH)
+	fmt.Printf("conf.ListenAddr: %s\n", conf.ListenAddr())
+
+	// srv := server.LaunchBlockingServer(conf.ListenAddr(), rateLimitH)
 	//testRedisSlidingCounterWindow(conn)
+
+	srv := server.LaunchBackgroundServer(conf.ListenAddr(), rateLimitH)
+	// install a signal handler for shutdown
+	sigkillchan := make(chan os.Signal)
+	signal.Notify(sigkillchan, os.Interrupt)
+	_ = <-sigkillchan
+	server.ShutdownServer(srv)
+	endProfiling()
+
 }
 
 func testRedisSlidingCounterWindow(conn redis.Conn) {

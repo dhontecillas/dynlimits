@@ -4,20 +4,29 @@ import (
 	"bytes"
 	"fmt"
 	"net/http"
+	"time"
 )
 
 type ProxyHandler struct {
 	scheme      string
 	forwardAddr string
 	client      *http.Client
+	transport   *http.Transport
 }
 
 func NewProxyHandler(scheme string, forwardAddr string) *ProxyHandler {
 	// TODO: check that scheme is http or https
+	tr := &http.Transport{
+		MaxIdleConns:    50,
+		IdleConnTimeout: 30 * time.Second,
+	}
 	return &ProxyHandler{
 		scheme:      scheme,
 		forwardAddr: forwardAddr,
-		client:      &http.Client{},
+		client: &http.Client{
+			Transport: tr,
+		},
+		transport: tr,
 	}
 }
 
@@ -36,6 +45,7 @@ func (ph *ProxyHandler) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	nr.Host = ph.forwardAddr
 	nr.URL.Scheme = ph.scheme
 	nr.URL.Host = ph.forwardAddr
+	nr.ContentLength = req.ContentLength
 
 	for key, slc := range req.Header {
 		nr.Header[key] = make([]string, len(slc))
@@ -45,10 +55,12 @@ func (ph *ProxyHandler) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	res, err := ph.client.Do(nr)
 	if err != nil {
 		// TODO: log the error
-		// fmt.Printf("error proxying the request: %s\n", err.Error())
+		fmt.Printf("error proxying the request: %s\n", err.Error())
 		rw.WriteHeader(http.StatusBadGateway)
 		return
 	}
+	defer res.Body.Close()
+
 	dstH := rw.Header()
 	for key, slc := range res.Header {
 		dstH[key] = make([]string, len(slc))

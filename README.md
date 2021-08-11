@@ -187,3 +187,11 @@ sliding counters window. But that would mean that all use the same
 This serves as an optimization to avoid having to fetch the sliding
 window from redis, when we know that a key will need to wait several seconds
 before is able to perform a new requests to that endpoint.
+
+
+# Other Rate Limit projects:
+
+## Sphinx
+
+[Sphinx](https://github.com/Clever/sphinx)
+
